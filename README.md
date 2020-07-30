@@ -39,3 +39,11 @@ However, we found fine tuning the parameters in Surprise to be cumbersome and di
 While surprise would be very useful for the data scientist who needs to make a rec engine in a hurry (and somehow has their data already in order), we decided to make our own system.
 
 ## Our Engine
+
+In order to compare the ratings of users for each movie we created a pivot table. From here we applied the normalization described earlier and set all cells without ratings to 0 (which is the user's average rating).
+
+leveraging scipy we turned our pivot table into a sparse matrix. Finally, we fit our sparse matrix to a KNN model with which to use in finding similar users.
+
+The core of our engine is around 3 actions. Given a user and model that has been trained, our model uses the suggest_movie funtion, which itself calls the get_new_movies and score_movie functions, in order to return a rated list of movies the user who has never seen, sorted by highest predicted rating.
+
+get_new_movies uses the model to find at least 5 neighbors to compare movies to. The function will return at least 10 movies that the user has not rated. Should the initial 5 neighbors not have at least 10 new movies for our use, the process is repeated with more neighbors until 10 titles are found.
