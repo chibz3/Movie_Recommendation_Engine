@@ -44,6 +44,22 @@ In order to compare the ratings of users for each movie we created a pivot table
 
 leveraging scipy we turned our pivot table into a sparse matrix. Finally, we fit our sparse matrix to a KNN model with which to use in finding similar users.
 
-The core of our engine is around 3 actions. Given a user and model that has been trained, our model uses the suggest_movie funtion, which itself calls the get_new_movies and score_movie functions, in order to return a rated list of movies the user who has never seen, sorted by highest predicted rating.
+The core of our engine is around 3 actions. Given a user and model that has been trained, our engine uses the suggest_movie funtion, which itself calls the get_new_movies and score_movie functions, in order to return a rated list of movies the user who has never seen, sorted by highest predicted rating.
 
 get_new_movies uses the model to find at least 5 neighbors to compare movies to. The function will return at least 10 movies that the user has not rated. Should the initial 5 neighbors not have at least 10 new movies for our use, the process is repeated with more neighbors until 10 titles are found.
+
+score_movie takes in a userId and movie title. It creates a sparse matrix for only users who have seen the movie; this takes care of the cases where you don't know how many neighbors you need to choose for a user in order to get the sufficient amount who have seen the specific movie in order to score it. It will use this matrix to find the 5 users who have seen the movie closest to the given user, take the mean of their weighted rating, and then add our user's average rating back to the mean to give an unweighted prediction.
+
+After enacting get_new_movies and score_movie, suggest_movies sorts all of the new movies by predicted rating and outputs the top 5.
+
+# Testing
+
+In order to set a baseline so that we can test future improvements we wanted to create a testing metric for our ratings. We thought a good way to begin would be to compare predicted ratings for a movie against what the actual ratings were. As a metric, we chose to use RMSE.
+
+out get_rmse function takes in a movie title. It creates a data from of only users who have seen the title, then takes their rating of the movie. It then creates predictive scores using the score_movie function (note: this function takes care to NOT include the user's score if the user has already seen the movie). Finally, we compare our predictions with the actual ratings by using Scikit Learn's mean_squared_error function and taking the square root of the result.
+
+# Conculsion
+
+Our engine can give movie suggestions for a user that they have never seen before. As well, because the functions are loosely coupled they are able to be used modularly and are easily able to be scored.
+
+By mimicking how new information is discovered in real life, we were able to create our own engine to model that process. Our engine can empoyer people to discover new movies on their own, without having to go through the burden of making friends.
