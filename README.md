@@ -23,7 +23,7 @@ In exploring our data we first looked for any trends in the genres present. The 
 Next, we investigated the distribution of ratings among movies. A rating of 4 was by far the most popular rating (26.8k movies), being just over twice as frequent as a rating of 5 (13.2k movies). Graphing the frequency each rating was given, it was easy to see that people generally rated movies more favorably. As this could mean that ratings for users were inconsistent we devised a way to equalize each user's ratings.
 
 <p align='center'>
-<img src='images/.png'>
+<img src='images/ratings.png'>
 </p>
 
 To create normalized weighted ratings we computed each user's mean rating and then subtracted this average from each rating - resulting in below-average ratings being negative amounts and above-average ratings being positive amounts.
